@@ -1,6 +1,7 @@
 // server.js
 const express = require('express');
 require('dotenv').config(); // Carrega as variáveis do .env
+const userRoutes = require('./userRoutes');
 
 const { setupDatabase } = require('./db');
 const { router: authRouter } = require('./auth');
