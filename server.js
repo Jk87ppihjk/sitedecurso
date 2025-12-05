@@ -1,11 +1,12 @@
 // server.js
 const express = require('express');
 require('dotenv').config(); // Carrega as variáveis do .env
-const userRoutes = require('./userRoutes');
 
+// Importa as configurações e middlewares
 const { setupDatabase } = require('./db');
 const { router: authRouter } = require('./auth');
 const adminRouter = require('./admin');
+const userRoutes = require('./userRoutes'); // Rotas para o aluno (ex: meus cursos)
 
 const app = express();
 
@@ -13,20 +14,27 @@ const app = express();
 app.use(express.json()); // Habilita o parsing de JSON no corpo da requisição
 
 // --- Rotas ---
-app.use('/api/auth', authRouter); // Rotas de Login e Cadastro
-app.use('/api/admin', adminRouter); // Rotas Protegidas do Painel ADM (Cursos, Módulos)
+app.use('/api/auth', authRouter);     // Rotas de Login e Cadastro
+app.use('/api/admin', adminRouter);   // Rotas Protegidas do Painel ADM (Cursos, Módulos)
+app.use('/api/users', userRoutes);    // Rotas do Aluno (ex: Meus Cursos)
 
-// Rota de Teste
+// Rota de Teste para verificar se o servidor está ativo
 app.get('/', (req, res) => {
-    res.send('API da Plataforma de Cursos Online está no ar!');
+    res.send('API da Plataforma de Cursos Online está no ar e funcionando! Acesse /api/auth/login ou /api/admin/courses.');
 });
 // ----------------
 
 // Inicialização do Servidor
 async function startServer() {
     // 1. Configura e verifica o banco de dados
-    await setupDatabase();
-
+    try {
+        await setupDatabase();
+    } catch (error) {
+        console.error("ERRO CRÍTICO: Falha na configuração inicial do banco de dados.", error);
+        // Não inicia o servidor se o DB não estiver pronto
+        return; 
+    }
+    
     // 2. Log de Confirmação das Variáveis de Ambiente
     console.log("====================================================");
     console.log("-> ✅ Variáveis de Ambiente Iniciadas Corretamente:");
