@@ -15,6 +15,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.7",
+    "cors": "^2.8.5",
     "sib-api-v3-sdk": "^8.5.0"
   },
   "devDependencies": {
